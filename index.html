@@ -2,21 +2,28 @@
 <html>
     <head>
         <title>Internet Radio</title>
+        <script src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'></script>
     </head>
     <body>
-        <h1>Welcome to Internet Radio</h1>
-        <button id='switch'>Switch</button>
-        <script src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'></script>
+        <div id='timeline'></div>
         <script>
-            var sources = ['my.mp3', 'my2.mp3', 'my3.mp3', 'my4.mp3'];
+            var sources = [
+              {audio: 'my.mp3', image: 'honor.jpg'},
+              {audio: 'my2.mp3', image: 'lucifer.jpg'},
+              {audio: 'my3.mp3', image: 'photo.jpg'},
+              {audio: 'my4.mp3', image: 'syrup.jpg'}
+            ];
             var sourceIndex = 0;
+
+            for (var i = 0; i < sources.length; i++) {
+              $('#timeline').append("<img src='img/"+ sources[i]['image'] + "'/>");
+            }
 
             // Create an <audio> element dynamically.
             var audio = new Audio();
-            audio.src = sources[sourceIndex];
+            audio.src = 'audio/' + sources[sourceIndex]['audio'];
             audio.autoplay = true;
             audio.loop = true;
-            document.body.appendChild(audio);
 
             var context = new AudioContext();
 
@@ -25,16 +32,17 @@
               var source = context.createMediaElementSource(audio);
               source.connect(context.destination);
             }, false);
-
-            $('#switch').click(function() {
-              sourceIndex += 1;
-              if(sourceIndex >= sources.length)
-              {
-                sourceIndex = 0;
-              }
-              audio.src = sources[sourceIndex];
-            });
-
         </script>
+        <style>
+
+          #timeline {
+            display: block;
+            width: 100%;
+          }
+          #timeline img {
+            width: 100%;
+            height: 100vh;
+          }
+        </style>
     </body>
 </html>

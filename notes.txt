@@ -1,0 +1,14 @@
+okay, next i should add a button that i can click that will change the source of the audio
+
+what's next?
+
+smooth transitions?
+or the scrolling feature?
+
+how about i put some pictures in that correspond to the songs
+
+and then change the source depending on which one you're looking at?
+
+and then i could make it so the volume transitions from max to 0 as you move to the edge of one picture
+
+then i could add a static channel that's constantly playing whose volume is the inverse of the currently playing song
