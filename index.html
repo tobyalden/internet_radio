@@ -1,27 +1,40 @@
 <!doctype html>
 <html>
     <head>
-        <title>Web Audio API</title>
+        <title>Internet Radio</title>
     </head>
     <body>
-        <h1>Welcome to the Web Audio API</h1>
+        <h1>Welcome to Internet Radio</h1>
+        <button id='switch'>Switch</button>
+        <script src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'></script>
         <script>
+            var sources = ['my.mp3', 'my2.mp3'];
+            var sourceIndex = 0;
+
             // Create an <audio> element dynamically.
             var audio = new Audio();
-            audio.src = 'my.mp3';
-            audio.controls = true;
+            audio.src = sources[sourceIndex];
             audio.autoplay = true;
+            audio.loop = true;
             document.body.appendChild(audio);
 
             var context = new AudioContext();
-            var gain = context.createGain();
 
             // Wait for window.onload to fire. See crbug.com/112368
             window.addEventListener('load', function(e) {
               var source = context.createMediaElementSource(audio);
-              source.connect(gain);
-              gain.connect(context.destination);
+              source.connect(context.destination);
             }, false);
+
+            $('#switch').click(function() {
+              sourceIndex += 1;
+              if(sourceIndex >= sources.length)
+              {
+                sourceIndex = 0;
+              }
+              audio.src = sources[sourceIndex];
+            });
+
         </script>
     </body>
 </html>
