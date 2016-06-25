@@ -32,6 +32,19 @@
               var source = context.createMediaElementSource(audio);
               source.connect(context.destination);
             }, false);
+
+            $(function() {
+                $( window ).scroll(function() {
+                  var bandHeight = $('#timeline').height() / sources.length;
+                  var newSourceIndex = Math.floor(($(document).scrollTop() + bandHeight/2) / bandHeight);
+                  if(sourceIndex != newSourceIndex)
+                  {
+                    sourceIndex = newSourceIndex;
+                    audio.src = 'audio/' + sources[sourceIndex]['audio'];
+                  }
+                  console.log(sourceIndex);
+                });
+            });
         </script>
         <style>
 

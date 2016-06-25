@@ -12,3 +12,18 @@ and then change the source depending on which one you're looking at?
 and then i could make it so the volume transitions from max to 0 as you move to the edge of one picture
 
 then i could add a static channel that's constantly playing whose volume is the inverse of the currently playing song
+
+$('#switch').click(function() {
+              sourceIndex += 1;
+              if(sourceIndex >= sources.length)
+              {
+                sourceIndex = 0;
+              }
+              audio.src = 'audio/' + sources[sourceIndex]['audio'];
+            });
+			
+it'd be cool if you could set songs to be played at either day or night
+
+2 is channel 2 at its quietest
+2.5 is channel 2 at its loudest
+3 is channel 2 at its quietest
