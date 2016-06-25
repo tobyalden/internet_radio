@@ -5,6 +5,7 @@
         <script src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'></script>
     </head>
     <body>
+        <div id="static"></div>
         <div id='timeline'></div>
         <script>
             var sources = [
@@ -25,35 +26,64 @@
             audio.autoplay = true;
             audio.loop = true;
 
+            var staticSfx = new Audio();
+            staticSfx.src = 'audio/static.mp3';
+            staticSfx.autoplay = true;
+            staticSfx.loop = true;
+            staticSfx.volume = 0;
+
             var context = new AudioContext();
 
             // Wait for window.onload to fire. See crbug.com/112368
             window.addEventListener('load', function(e) {
-              var source = context.createMediaElementSource(audio);
-              source.connect(context.destination);
+              var audioSource = context.createMediaElementSource(audio);
+              audioSource.connect(context.destination);
+              var radioStaticSource = context.createMediaElementSource(staticSfx);
+              radioStaticSource.connect(context.destination);
+              $(function() {
+
+                  function update() {
+                    var bandHeight = $('#timeline').height() / sources.length;
+                    var newSourceIndex = Math.floor(($(document).scrollTop() + bandHeight/2) / bandHeight);
+                    var volume = (($(document).scrollTop() + bandHeight/2) / bandHeight) % 1;
+                    if(audioSource.context.state != 'running')
+                    {
+                      volume = 0;
+                    }
+                    else if (volume > 0.5)
+                    {
+                        volume = 1 - volume;
+                    }
+                    audio.volume = volume;
+                    staticSfx.volume = 0.5 - volume;
+                    if(staticSfx.volume < 0)
+                    {
+                      staticSfx.volume = 0;
+                    }
+                    else
+                    {
+                      staticSfx.volume *= 2;
+                    }
+                    console.log(volume * 2);
+                    if(sourceIndex != newSourceIndex)
+                    {
+                      sourceIndex = newSourceIndex;
+                      audio.src = 'audio/' + sources[sourceIndex]['audio'];
+                    }
+                    $('#static').fadeTo(5, staticSfx.volume);
+                  }
+
+                  update();
+
+                  $( window ).scroll(function() {
+                    update();
+                  });
+              });
             }, false);
 
-            $(function() {
-                $( window ).scroll(function() {
-                  var bandHeight = $('#timeline').height() / sources.length;
-                  var newSourceIndex = Math.floor(($(document).scrollTop() + bandHeight/2) / bandHeight);
-                  var volume = (($(document).scrollTop() + bandHeight/2) / bandHeight) % 1;
-                  if (volume > 0.5)
-                  {
-                      volume = 1 - volume;
-                  }
-                  audio.volume = volume;
-                  console.log(volume * 2);
-                  if(sourceIndex != newSourceIndex)
-                  {
-                    sourceIndex = newSourceIndex;
-                    audio.src = 'audio/' + sources[sourceIndex]['audio'];
-                  }
-                });
-            });
+
         </script>
         <style>
-
           #timeline {
             display: block;
             width: 100%;
@@ -61,6 +91,15 @@
           #timeline img {
             width: 100%;
             height: 100vh;
+          }
+          #static {
+            background-image: url('img/static.gif'  );
+            opacity: 0%;
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            left: 0px;
+            top: 0px;
           }
         </style>
     </body>
